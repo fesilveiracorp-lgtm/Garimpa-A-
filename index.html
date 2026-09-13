@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garimpa Aí — Clube de Ofertas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --noite: #0B0E1F;
+  --noite-2: #161A34;
+  --painel: #1C2140;
+  --contorno: #2E345C;
+  --creme: #EDEAF6;
+  --creme-2: #A7ABCF;
+  --ouro: #F2B90F;
+  --ouro-claro: #FFD966;
+  --roxo: #9B5DE5;
+  --roxo-escuro: #6A2FB0;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.35), transparent),
+    radial-gradient(1.5px 1.5px at 90px 80px, rgba(255,255,255,0.25), transparent),
+    radial-gradient(1px 1px at 160px 45px, rgba(255,255,255,0.3), transparent),
+    radial-gradient(1.5px 1.5px at 210px 110px, rgba(255,255,255,0.2), transparent),
+    radial-gradient(1px 1px at 260px 20px, rgba(255,255,255,0.3), transparent),
+    var(--noite);
+  background-attachment:fixed;
+  color:var(--creme);
+  font-family:'Inter',sans-serif;
+  padding-bottom:100px;
+}
+
+header{
+  background:linear-gradient(180deg, var(--noite-2), var(--noite));
+  color:var(--creme);
+  padding:30px 20px 24px;
+  border-bottom:3px solid var(--ouro);
+  position:relative;
+  overflow:hidden;
+}
+
+header::after{
+  content:"✦ ✧ ✦";
+  position:absolute;
+  top:14px;
+  right:20px;
+  color:var(--ouro-claro);
+  font-size:0.9rem;
+  letter-spacing:8px;
+  opacity:0.7;
+}
+
+header .marca{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:800;
+  font-size:2.1rem;
+  letter-spacing:0.5px;
+  margin:0;
+  color:var(--ouro);
+  text-shadow:0 2px 0 rgba(0,0,0,0.35);
+}
+
+header .sub{
+  margin:6px 0 0;
+  font-size:0.9rem;
+  color:var(--creme-2);
+  font-weight:500;
+}
+
+header .selo{
+  display:inline-block;
+  margin-top:12px;
+  background:var(--roxo);
+  color:#fff;
+  font-size:0.72rem;
+  font-weight:700;
+  padding:5px 11px;
+  border-radius:20px;
+  letter-spacing:0.3px;
+}
+
+.faixa{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:14px 20px;
+  background:var(--noite-2);
+  border-bottom:1px solid var(--contorno);
+}
+
+.faixa button{
+  flex:0 0 auto;
+  border:1.5px solid var(--contorno);
+  background:transparent;
+  color:var(--creme-2);
+  font-family:'Inter',sans-serif;
+  font-weight:600;
+  font-size:0.85rem;
+  padding:7px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.faixa button.ativo{
+  background:var(--ouro);
+  color:var(--noite);
+  border-color:var(--ouro);
+}
+
+main{
+  padding:18px 16px 8px;
+  max-width:640px;
+  margin:0 auto;
+}
+
+.vazio{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--creme-2);
+}
+
+.vazio h2{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  font-size:1.3rem;
+  margin-bottom:6px;
+  color:var(--creme);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:14px;
+}
+
+@media(min-width:560px){
+  .grid{grid-template-columns:1fr 1fr;}
+}
+
+.card{
+  background:var(--painel);
+  border:1px solid var(--contorno);
+  border-left:4px solid var(--ouro);
+  border-radius:8px;
+  padding:16px;
+  position:relative;
+}
+
+.card .cat{
+  font-size:0.72rem;
+  font-weight:700;
+  color:var(--roxo-escuro);
+  background:rgba(155,93,229,0.18);
+  color:#C9A6F5;
+  display:inline-block;
+  padding:2px 9px;
+  border-radius:10px;
+  margin-bottom:8px;
+}
+
+.card h3{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  font-size:1.15rem;
+  margin:0 0 6px;
+  line-height:1.25;
+  color:var(--creme);
+}
+
+.card .preco{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  color:var(--ouro-claro);
+  font-size:1.15rem;
+  margin:0 0 8px;
+}
+
+.card .vendedor{
+  font-size:0.82rem;
+  color:var(--creme-2);
+  margin-bottom:12px;
+}
+
+.card .zap{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--ouro);
+  color:var(--noite);
+  text-decoration:none;
+  font-weight:700;
+  font-size:0.85rem;
+  padding:9px 14px;
+  border-radius:20px;
+}
+
+.card .status{
+  position:absolute;
+  top:14px;
+  right:14px;
+  font-size:0.68rem;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:10px;
+  background:rgba(242,185,15,0.18);
+  color:var(--ouro-claro);
+}
+
+.card.vendido{
+  opacity:0.55;
+}
+
+.card.vendido .status{
+  background:var(--roxo-escuro);
+  color:#fff;
+}
+
+.fab{
+  position:fixed;
+  bottom:22px;
+  right:22px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:var(--ouro);
+  color:var(--noite);
+  border:none;
+  font-size:1.7rem;
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  box-shadow:0 4px 18px rgba(242,185,15,0.4);
+  cursor:pointer;
+}
+
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(4,6,16,0.72);
+  align-items:flex-end;
+  z-index:10;
+}
+
+.overlay.aberto{display:flex;}
+
+.folha{
+  background:var(--noite-2);
+  width:100%;
+  max-height:88vh;
+  overflow-y:auto;
+  border-radius:14px 14px 0 0;
+  padding:22px 20px 30px;
+  border-top:4px solid var(--ouro);
+}
+
+.folha h2{
+  font-family:'Baloo 2', sans-serif;
+  font-weight:700;
+  font-size:1.3rem;
+  margin:0 0 16px;
+  color:var(--ouro-claro);
+}
+
+.campo{
+  margin-bottom:14px;
+}
+
+.campo label{
+  display:block;
+  font-size:0.78rem;
+  font-weight:600;
+  color:var(--creme-2);
+  margin-bottom:5px;
+}
+
+.campo input, .campo select, .campo textarea{
+  width:100%;
+  padding:10px 11px;
+  border:1.5px solid var(--contorno);
+  border-radius:6px;
+  font-family:'Inter',sans-serif;
+  font-size:0.95rem;
+  background:var(--painel);
+  color:var(--creme);
+}
+
+.campo input::placeholder, .campo textarea::placeholder{
+  color:#6E7399;
+}
+
+.campo textarea{
+  resize:vertical;
+  min-height:64px;
+  font-family:'Inter',sans-serif;
+}
+
+.campo input[type="file"]{
+  padding:8px;
+}
+
+.previa-foto{
+  margin-top:8px;
+  width:100%;
+  max-height:160px;
+  object-fit:cover;
+  border-radius:6px;
+  display:none;
+  border:1px solid var(--contorno);
+}
+
+.card .foto{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:6px;
+  margin-bottom:10px;
+  display:block;
+}
+
+.card .descricao{
+  font-size:0.85rem;
+  color:var(--creme-2);
+  line-height:1.4;
+  margin:0 0 8px;
+}
+
+.botoes-folha{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+.botoes-folha button{
+  flex:1;
+  padding:12px;
+  border-radius:20px;
+  border:none;
+  font-weight:700;
+  font-size:0.9rem;
+  cursor:pointer;
+}
+
+.btn-salvar{background:var(--ouro);color:var(--noite);}
+.btn-cancelar{background:transparent;color:var(--creme-2);border:1.5px solid var(--contorno) !important;}
+
+.alternar{
+  background:none;
+  border:none;
+  color:var(--roxo);
+  font-size:0.75rem;
+  font-weight:600;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+}
+
+.excluir{
+  background:none;
+  border:none;
+  color:#D8586A;
+  font-size:0.75rem;
+  font-weight:600;
+  text-decoration:underline;
+  cursor:pointer;
+  padding:0;
+}
+
+.rodape-admin{
+  text-align:center;
+  margin-top:26px;
+  padding-bottom:10px;
+}
+
+.rodape-admin button{
+  background:none;
+  border:none;
+  color:#5A5F82;
+  font-size:0.72rem;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.carregando{
+  text-align:center;
+  padding:50px 20px;
+  color:var(--creme-2);
+  font-size:0.9rem;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <p class="marca">GARIMPA AÍ</p>
+  <p class="sub">Clube de ofertas — achados da semana</p>
+  <span class="selo">Toda segunda-feira tem grupo aberto</span>
+</header>
+
+<div class="faixa" id="faixaCategorias"></div>
+
+<main>
+  <div id="carregando" class="carregando">Abrindo o catálogo…</div>
+  <div id="grid" class="grid" style="display:none;"></div>
+  <div id="vazio" class="vazio" style="display:none;">
+    <h2>Ainda sem achados aqui</h2>
+    <p>Toque no + para cadastrar o primeiro produto ou serviço.</p>
+  </div>
+  <div class="rodape-admin">
+    <button id="btnResetar">Zerar catálogo (admin)</button>
+  </div>
+</main>
+
+<button class="fab" id="btnAbrir" title="Adicionar produto">+</button>
+
+<div class="overlay" id="overlay">
+  <div class="folha">
+    <h2>Novo achado</h2>
+    <div class="campo">
+      <label>Produto ou serviço</label>
+      <input type="text" id="fNome" placeholder="Ex: Ensaio fotográfico">
+    </div>
+    <div class="campo">
+      <label>Categoria</label>
+      <select id="fCategoria">
+        <option>Produtos</option>
+        <option>Serviços</option>
+        <option>Digital</option>
+        <option>Alimentação</option>
+        <option>Moda</option>
+        <option>Outros</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label>Descrição</label>
+      <textarea id="fDescricao" placeholder="Conte os detalhes: tamanho, condição, o que está incluso..."></textarea>
+    </div>
+    <div class="campo">
+      <label>Foto</label>
+      <input type="file" id="fFoto" accept="image/*">
+      <img id="previaFoto" class="previa-foto">
+    </div>
+    <div class="campo">
+      <label>Preço</label>
+      <input type="text" id="fPreco" placeholder="Ex: R$ 80,00">
+    </div>
+    <div class="campo">
+      <label>Seu nome</label>
+      <input type="text" id="fVendedor" placeholder="Como querem te chamar">
+    </div>
+    <div class="campo">
+      <label>Seu WhatsApp (com DDD)</label>
+      <input type="text" id="fZap" placeholder="Ex: 11999998888">
+    </div>
+    <div class="botoes-folha">
+      <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
+      <button class="btn-salvar" id="btnSalvar">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CHAVE = 'garimpai:produtos';
+const SENHA_ADMIN = 'garimpa2026';
+let produtos = [];
+let filtroAtual = 'Todos';
+let fotoAtual = '';
+const categorias = ['Todos','Produtos','Serviços','Digital','Alimentação','Moda','Outros'];
+
+function redimensionarImagem(arquivo){
+  return new Promise((resolve, reject) => {
+    const leitor = new FileReader();
+    leitor.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const larguraMax = 640;
+        const escala = Math.min(1, larguraMax / img.width);
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width * escala;
+        canvas.height = img.height * escala;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.72));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    leitor.onerror = reject;
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
+document.getElementById('fFoto').onchange = async (e) => {
+  const arquivo = e.target.files[0];
+  if(!arquivo) return;
+  fotoAtual = await redimensionarImagem(arquivo);
+  const previa = document.getElementById('previaFoto');
+  previa.src = fotoAtual;
+  previa.style.display = 'block';
+};
+
+async function carregar(){
+  try{
+    const r = await window.storage.get(CHAVE, true);
+    produtos = r ? JSON.parse(r.value) : [];
+  }catch(e){
+    produtos = [];
+  }
+  document.getElementById('carregando').style.display = 'none';
+  desenharFaixa();
+  desenharGrid();
+}
+
+async function salvarLista(){
+  await window.storage.set(CHAVE, JSON.stringify(produtos), true);
+}
+
+function desenharFaixa(){
+  const faixa = document.getElementById('faixaCategorias');
+  faixa.innerHTML = '';
+  categorias.forEach(c => {
+    const b = document.createElement('button');
+    b.textContent = c;
+    if(c === filtroAtual) b.classList.add('ativo');
+    b.onclick = () => { filtroAtual = c; desenharFaixa(); desenharGrid(); };
+    faixa.appendChild(b);
+  });
+}
+
+function desenharGrid(){
+  const grid = document.getElementById('grid');
+  const vazio = document.getElementById('vazio');
+  const lista = filtroAtual === 'Todos' ? produtos : produtos.filter(p => p.categoria === filtroAtual);
+
+  if(lista.length === 0){
+    grid.style.display = 'none';
+    vazio.style.display = 'block';
+    return;
+  }
+  vazio.style.display = 'none';
+  grid.style.display = 'grid';
+  grid.innerHTML = '';
+
+  [...lista].reverse().forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card' + (p.vendido ? ' vendido' : '');
+
+    const statusTxt = p.vendido ? 'VENDIDO' : 'DISPONÍVEL';
+    const msg = encodeURIComponent('Oi ' + p.vendedor + ', vi "' + p.nome + '" no Garimpa Aí e quero saber mais!');
+    const numero = (p.zap || '').replace(/\D/g,'');
+
+    card.innerHTML = `
+      <span class="status">${statusTxt}</span>
+      ${p.foto ? `<img class="foto" src="${p.foto}">` : ''}
+      <div class="cat">${p.categoria}</div>
+      <h3>${p.nome}</h3>
+      <p class="preco">${p.preco}</p>
+      ${p.descricao ? `<p class="descricao">${p.descricao}</p>` : ''}
+      <p class="vendedor">com ${p.vendedor}</p>
+      ${numero ? `<a class="zap" href="https://wa.me/${numero}?text=${msg}" target="_blank">💬 Falar no Zap</a>` : ''}
+      <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap;">
+        <button data-id="${p.id}" class="alternar">
+          ${p.vendido ? 'Marcar como disponível' : 'Marcar como vendido'}
+        </button>
+        <button data-id="${p.id}" class="excluir">Excluir</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.alternar').forEach(btn => {
+    btn.onclick = async () => {
+      const id = btn.getAttribute('data-id');
+      const item = produtos.find(p => p.id === id);
+      if(item){
+        item.vendido = !item.vendido;
+        await salvarLista();
+        desenharGrid();
+      }
+    };
+  });
+
+  grid.querySelectorAll('.excluir').forEach(btn => {
+    btn.onclick = async () => {
+      const senha = prompt('Senha de admin para excluir este anúncio:');
+      if(senha === null) return;
+      if(senha !== SENHA_ADMIN){
+        alert('Senha incorreta.');
+        return;
+      }
+      const id = btn.getAttribute('data-id');
+      produtos = produtos.filter(p => p.id !== id);
+      await salvarLista();
+      desenharGrid();
+    };
+  });
+}
+
+document.getElementById('btnResetar').onclick = async () => {
+  const senha = prompt('Senha de admin para zerar TODO o catálogo:');
+  if(senha === null) return;
+  if(senha !== SENHA_ADMIN){
+    alert('Senha incorreta.');
+    return;
+  }
+  if(!confirm('Isso vai apagar todos os anúncios pra sempre. Confirmar?')) return;
+  produtos = [];
+  await salvarLista();
+  desenharGrid();
+};
+
+document.getElementById('btnAbrir').onclick = () => {
+  document.getElementById('overlay').classList.add('aberto');
+};
+document.getElementById('btnCancelar').onclick = () => {
+  document.getElementById('overlay').classList.remove('aberto');
+};
+
+document.getElementById('btnSalvar').onclick = async () => {
+  const nome = document.getElementById('fNome').value.trim();
+  const categoria = document.getElementById('fCategoria').value;
+  const descricao = document.getElementById('fDescricao').value.trim();
+  const preco = document.getElementById('fPreco').value.trim();
+  const vendedor = document.getElementById('fVendedor').value.trim();
+  const zap = document.getElementById('fZap').value.trim();
+
+  if(!nome || !preco || !vendedor){
+    alert('Preencha ao menos o nome, o preço e seu nome.');
+    return;
+  }
+
+  produtos.push({
+    id: Date.now().toString(),
+    nome, categoria, descricao, preco, vendedor, zap,
+    foto: fotoAtual,
+    vendido: false
+  });
+
+  await salvarLista();
+  desenharGrid();
+
+  document.getElementById('fNome').value = '';
+  document.getElementById('fDescricao').value = '';
+  document.getElementById('fPreco').value = '';
+  document.getElementById('fVendedor').value = '';
+  document.getElementById('fZap').value = '';
+  document.getElementById('fFoto').value = '';
+  document.getElementById('previaFoto').style.display = 'none';
+  fotoAtual = '';
+  document.getElementById('overlay').classList.remove('aberto');
+};
+
+carregar();
+</script>
+
+</body>
+</html>
