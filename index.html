@@ -484,6 +484,10 @@ async function garantirBin(){
     },
     body: JSON.stringify([])
   });
+  if(!resp.ok){
+    const textoErro = await resp.text();
+    throw new Error('Falha ao criar catálogo (status ' + resp.status + '): ' + textoErro);
+  }
   const data = await resp.json();
   const novoId = data.metadata.id;
   BIN_ID = novoId;
@@ -537,6 +541,7 @@ async function carregar(){
     produtos = data.record || [];
   }catch(e){
     produtos = [];
+    alert('Deu erro ao abrir o catálogo:\n\n' + e.message);
   }
   document.getElementById('carregando').style.display = 'none';
   desenharFaixa();
@@ -696,9 +701,6 @@ document.getElementById('btnSalvar').onclick = async () => {
 
 carregar();
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
