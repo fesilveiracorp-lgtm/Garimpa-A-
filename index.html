@@ -605,8 +605,11 @@ main{
     <div class="linha-novo-item">
       <input type="text" id="fItemNome" placeholder="Nome do item (ex: Tam. P)">
       <input type="text" id="fItemPreco" class="item-preco" placeholder="R$ 40">
-      <button type="button" class="btn-add-item" id="btnAddItem">+ Adicionar</button>
     </div>
+    <label style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--creme-2); margin:-4px 0 10px;">
+      <input type="checkbox" id="fItemCombinar" style="width:auto;"> Preço a combinar (sem valor fixo)
+    </label>
+    <button type="button" class="btn-add-item" id="btnAddItem" style="width:100%;">+ Adicionar item</button>
 
     <div class="campo" style="margin-top:16px;">
       <label>Seu nome</label>
@@ -717,27 +720,42 @@ function desenharItensForm(){
   });
 }
 
+document.getElementById('fItemCombinar').onchange = (e) => {
+  const campoPreco = document.getElementById('fItemPreco');
+  campoPreco.disabled = e.target.checked;
+  if(e.target.checked) campoPreco.value = '';
+};
+
 document.getElementById('btnAddItem').onclick = () => {
   const nome = document.getElementById('fItemNome').value.trim();
-  const preco = document.getElementById('fItemPreco').value.trim();
+  const combinar = document.getElementById('fItemCombinar').checked;
+  const preco = combinar ? 'A combinar' : document.getElementById('fItemPreco').value.trim();
   if(!nome || !preco){
-    alert('Preencha o nome e o preço do item.');
+    alert('Preencha o nome do item e o preço (ou marque "a combinar").');
     return;
   }
   itensAtuais.push({ nome, preco });
   document.getElementById('fItemNome').value = '';
   document.getElementById('fItemPreco').value = '';
+  document.getElementById('fItemCombinar').checked = false;
+  document.getElementById('fItemPreco').disabled = false;
   desenharItensForm();
 };
 
+async function buscarProdutosDoServidor(){
+  const id = await garantirBin();
+  const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest?ts=${Date.now()}`, {
+    headers: { 'X-Master-Key': MASTER_KEY },
+    cache: 'no-store'
+  });
+  if(!r.ok) throw new Error('Falha ao buscar catálogo (status ' + r.status + ')');
+  const data = await r.json();
+  return (data.record && data.record.produtos) || [];
+}
+
 async function carregar(){
   try{
-    const id = await garantirBin();
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
-      headers: { 'X-Master-Key': MASTER_KEY }
-    });
-    const data = await r.json();
-    produtos = (data.record && data.record.produtos) || [];
+    produtos = await buscarProdutosDoServidor();
   }catch(e){
     produtos = [];
     alert('Deu erro ao abrir o catálogo:\n\n' + e.message);
@@ -860,11 +878,16 @@ function desenharGrid(){
   grid.querySelectorAll('.alternar').forEach(btn => {
     btn.onclick = async () => {
       const id = btn.getAttribute('data-id');
-      const item = produtos.find(p => p.id === id);
-      if(item){
-        item.vendido = !item.vendido;
-        await salvarLista();
-        desenharGrid();
+      try{
+        produtos = await buscarProdutosDoServidor();
+        const item = produtos.find(p => p.id === id);
+        if(item){
+          item.vendido = !item.vendido;
+          await salvarLista();
+          desenharGrid();
+        }
+      }catch(e){
+        alert('Erro ao atualizar: ' + e.message);
       }
     };
   });
@@ -878,9 +901,14 @@ function desenharGrid(){
         return;
       }
       const id = btn.getAttribute('data-id');
-      produtos = produtos.filter(p => p.id !== id);
-      await salvarLista();
-      desenharGrid();
+      try{
+        produtos = await buscarProdutosDoServidor();
+        produtos = produtos.filter(p => p.id !== id);
+        await salvarLista();
+        desenharGrid();
+      }catch(e){
+        alert('Erro ao excluir: ' + e.message);
+      }
     };
   });
 }
@@ -914,6 +942,8 @@ function limparFormulario(){
   document.getElementById('fFoto').value = '';
   document.getElementById('fItemNome').value = '';
   document.getElementById('fItemPreco').value = '';
+  document.getElementById('fItemPreco').disabled = false;
+  document.getElementById('fItemCombinar').checked = false;
   document.getElementById('previasFotos').innerHTML = '';
   document.getElementById('campoUrl').style.display = 'none';
   fotosAtuais = [];
@@ -938,18 +968,24 @@ document.getElementById('btnSalvar').onclick = async () => {
     return;
   }
 
-  produtos.push({
+  const novoAnuncio = {
     id: Date.now().toString(),
     nome, categoria, descricao, vendedor, zap, url,
     fotos: fotosAtuais,
     itens: itensAtuais,
     vendido: false
-  });
+  };
 
-  await salvarLista();
-  desenharGrid();
-  limparFormulario();
-  document.getElementById('overlay').classList.remove('aberto');
+  try{
+    produtos = await buscarProdutosDoServidor();
+    produtos.push(novoAnuncio);
+    await salvarLista();
+    desenharGrid();
+    limparFormulario();
+    document.getElementById('overlay').classList.remove('aberto');
+  }catch(e){
+    alert('Erro ao publicar: ' + e.message);
+  }
 };
 
 desenharItensForm();
