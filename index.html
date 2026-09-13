@@ -198,9 +198,7 @@ main{
   font-size:0.9rem;
 }
 
-.lista-itens li span:first-child{
-  color:var(--creme);
-}
+.lista-itens li span:first-child{color:var(--creme);}
 
 .lista-itens li span:last-child{
   color:var(--ouro-claro);
@@ -250,11 +248,7 @@ main{
 }
 
 .card.vendido{opacity:0.55;}
-
-.card.vendido .status{
-  background:var(--roxo-escuro);
-  color:#fff;
-}
+.card.vendido .status{background:var(--roxo-escuro); color:#fff;}
 
 .wrap-foto{position:relative;}
 
@@ -382,9 +376,7 @@ main{
   border:1px solid var(--contorno);
 }
 
-.lista-itens-form{
-  margin-bottom:10px;
-}
+.lista-itens-form{margin-bottom:10px;}
 
 .linha-item-lista{
   display:flex;
@@ -408,11 +400,7 @@ main{
   padding:0 4px;
 }
 
-.linha-novo-item{
-  display:flex;
-  gap:8px;
-}
-
+.linha-novo-item{display:flex; gap:8px;}
 .linha-novo-item input{flex:1;}
 .linha-novo-item input.item-preco{max-width:100px; flex:0 0 auto;}
 
@@ -428,11 +416,7 @@ main{
   white-space:nowrap;
 }
 
-.botoes-folha{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
+.botoes-folha{display:flex; gap:10px; margin-top:20px;}
 
 .botoes-folha button{
   flex:1;
@@ -448,47 +432,27 @@ main{
 .btn-cancelar{background:transparent;color:var(--creme-2);border:1.5px solid var(--contorno) !important;}
 
 .alternar{
-  background:none;
-  border:none;
-  color:var(--roxo);
-  font-size:0.75rem;
-  font-weight:600;
-  text-decoration:underline;
-  cursor:pointer;
-  padding:0;
+  background:none; border:none; color:var(--roxo);
+  font-size:0.75rem; font-weight:600; text-decoration:underline;
+  cursor:pointer; padding:0;
 }
 
 .excluir{
-  background:none;
-  border:none;
-  color:#D8586A;
-  font-size:0.75rem;
-  font-weight:600;
-  text-decoration:underline;
-  cursor:pointer;
-  padding:0;
+  background:none; border:none; color:#D8586A;
+  font-size:0.75rem; font-weight:600; text-decoration:underline;
+  cursor:pointer; padding:0;
 }
 
-.rodape-admin{
-  text-align:center;
-  margin-top:26px;
-  padding-bottom:10px;
-}
+.rodape-admin{text-align:center; margin-top:26px; padding-bottom:10px;}
 
 .rodape-admin button{
-  background:none;
-  border:none;
-  color:#5A5F82;
-  font-size:0.72rem;
-  text-decoration:underline;
-  cursor:pointer;
+  background:none; border:none; color:#5A5F82;
+  font-size:0.72rem; text-decoration:underline; cursor:pointer;
 }
 
 .carregando{
-  text-align:center;
-  padding:50px 20px;
-  color:var(--creme-2);
-  font-size:0.9rem;
+  text-align:center; padding:50px 20px;
+  color:var(--creme-2); font-size:0.9rem;
 }
 
 .galeria-overlay{
@@ -513,33 +477,21 @@ main{
 }
 
 .galeria-miniaturas{
-  display:flex;
-  gap:8px;
-  margin-top:14px;
-  flex-wrap:wrap;
-  justify-content:center;
+  display:flex; gap:8px; margin-top:14px;
+  flex-wrap:wrap; justify-content:center;
 }
 
 .galeria-miniaturas img{
-  width:52px;
-  height:52px;
-  object-fit:cover;
-  border-radius:6px;
-  border:2px solid transparent;
-  cursor:pointer;
+  width:52px; height:52px; object-fit:cover;
+  border-radius:6px; border:2px solid transparent; cursor:pointer;
 }
 
 .galeria-miniaturas img.ativa{border-color:var(--ouro);}
 
 .galeria-fechar{
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:none;
-  border:none;
-  color:var(--creme);
-  font-size:1.8rem;
-  cursor:pointer;
+  position:absolute; top:20px; right:20px;
+  background:none; border:none; color:var(--creme);
+  font-size:1.8rem; cursor:pointer;
 }
 </style>
 </head>
@@ -606,7 +558,7 @@ main{
       <input type="text" id="fItemNome" placeholder="Nome do item (ex: Tam. P)">
       <input type="text" id="fItemPreco" class="item-preco" placeholder="R$ 40">
     </div>
-    <label style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--creme-2); margin:-4px 0 10px;">
+    <label style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:var(--creme-2); margin:8px 0 10px;">
       <input type="checkbox" id="fItemCombinar" style="width:auto;"> Preço a combinar (sem valor fixo)
     </label>
     <button type="button" class="btn-add-item" id="btnAddItem" style="width:100%;">+ Adicionar item</button>
@@ -634,36 +586,29 @@ main{
 
 <script>
 const SENHA_ADMIN = 'garimpa2026';
-const MASTER_KEY = '$2a$10$ZqnMw66wN1NcdYTN4sKN.eLi1tSyd2iMtfjhPrmoq41yYc9G1F19W';
-let BIN_ID = '6aa6d1c8ffd5d1605301f465';
-
-async function garantirBin(){
-  if(BIN_ID) return BIN_ID;
-  const resp = await fetch('https://api.jsonbin.io/v3/b', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': MASTER_KEY,
-      'X-Bin-Private': 'false'
-    },
-    body: JSON.stringify({ produtos: [] })
-  });
-  if(!resp.ok){
-    const textoErro = await resp.text();
-    throw new Error('Falha ao criar catálogo (status ' + resp.status + '): ' + textoErro);
-  }
-  const data = await resp.json();
-  const novoId = data.metadata.id;
-  BIN_ID = novoId;
-  alert('Catálogo criado pela primeira vez!\n\nCopie este código:\n' + novoId + '\n\ne me avise para eu deixar isso permanente no arquivo.');
-  return novoId;
-}
+const FIREBASE_URL = 'https://garimpa-ai-default-rtdb.firebaseio.com';
 
 let produtos = [];
 let filtroAtual = 'Todos';
 let fotosAtuais = [];
 let itensAtuais = [];
 const categorias = ['Todos','Produtos','Serviços','Digital','Alimentação','Moda','Outros'];
+
+async function buscarProdutosDoServidor(){
+  const r = await fetch(`${FIREBASE_URL}/produtos.json?ts=${Date.now()}`, { cache: 'no-store' });
+  if(!r.ok) throw new Error('Falha ao buscar catálogo (status ' + r.status + ')');
+  const data = await r.json();
+  return Array.isArray(data) ? data.filter(Boolean) : (data ? Object.values(data) : []);
+}
+
+async function salvarLista(){
+  const resp = await fetch(`${FIREBASE_URL}/produtos.json`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(produtos)
+  });
+  if(!resp.ok) throw new Error('Falha ao salvar catálogo (status ' + resp.status + ')');
+}
 
 function redimensionarImagem(arquivo){
   return new Promise((resolve, reject) => {
@@ -742,17 +687,6 @@ document.getElementById('btnAddItem').onclick = () => {
   desenharItensForm();
 };
 
-async function buscarProdutosDoServidor(){
-  const id = await garantirBin();
-  const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest?ts=${Date.now()}`, {
-    headers: { 'X-Master-Key': MASTER_KEY },
-    cache: 'no-store'
-  });
-  if(!r.ok) throw new Error('Falha ao buscar catálogo (status ' + r.status + ')');
-  const data = await r.json();
-  return (data.record && data.record.produtos) || [];
-}
-
 async function carregar(){
   try{
     produtos = await buscarProdutosDoServidor();
@@ -763,22 +697,6 @@ async function carregar(){
   document.getElementById('carregando').style.display = 'none';
   desenharFaixa();
   desenharGrid();
-}
-
-async function salvarLista(){
-  try{
-    const id = await garantirBin();
-    await fetch(`https://api.jsonbin.io/v3/b/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': MASTER_KEY
-      },
-      body: JSON.stringify({ produtos: produtos })
-    });
-  }catch(e){
-    console.error(e);
-  }
 }
 
 function desenharFaixa(){
