@@ -470,6 +470,26 @@ main{
 <script>
 const CHAVE = 'garimpai:produtos';
 const SENHA_ADMIN = 'garimpa2026';
+const MASTER_KEY = '$2a$10$ZqnMw66wN1NcdYTN4sKN.eLi1tSyd2iMtfjhPrmoq41yYc9G1F19W';
+let BIN_ID = ''; // depois do primeiro carregamento, cole aqui o código que aparecer no alerta
+
+async function garantirBin(){
+  if(BIN_ID) return BIN_ID;
+  const resp = await fetch('https://api.jsonbin.io/v3/b', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': MASTER_KEY,
+      'X-Bin-Private': 'false'
+    },
+    body: JSON.stringify([])
+  });
+  const data = await resp.json();
+  const novoId = data.metadata.id;
+  BIN_ID = novoId;
+  alert('Catálogo criado pela primeira vez!\n\nCopie este código:\n' + novoId + '\n\ne me avise para eu deixar isso permanente no arquivo.');
+  return novoId;
+}
 let produtos = [];
 let filtroAtual = 'Todos';
 let fotoAtual = '';
@@ -509,8 +529,12 @@ document.getElementById('fFoto').onchange = async (e) => {
 
 async function carregar(){
   try{
-    const r = await window.storage.get(CHAVE, true);
-    produtos = r ? JSON.parse(r.value) : [];
+    const id = await garantirBin();
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
+      headers: { 'X-Master-Key': MASTER_KEY }
+    });
+    const data = await r.json();
+    produtos = data.record || [];
   }catch(e){
     produtos = [];
   }
@@ -520,7 +544,19 @@ async function carregar(){
 }
 
 async function salvarLista(){
-  await window.storage.set(CHAVE, JSON.stringify(produtos), true);
+  try{
+    const id = await garantirBin();
+    await fetch(`https://api.jsonbin.io/v3/b/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': MASTER_KEY
+      },
+      body: JSON.stringify(produtos)
+    });
+  }catch(e){
+    console.error(e);
+  }
 }
 
 function desenharFaixa(){
@@ -660,6 +696,9 @@ document.getElementById('btnSalvar').onclick = async () => {
 
 carregar();
 </script>
+
+</body>
+</html>
 
 </body>
 </html>
