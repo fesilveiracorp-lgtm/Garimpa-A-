@@ -482,7 +482,7 @@ async function garantirBin(){
       'X-Master-Key': MASTER_KEY,
       'X-Bin-Private': 'false'
     },
-    body: JSON.stringify([])
+    body: JSON.stringify({ produtos: [] })
   });
   if(!resp.ok){
     const textoErro = await resp.text();
@@ -538,7 +538,7 @@ async function carregar(){
       headers: { 'X-Master-Key': MASTER_KEY }
     });
     const data = await r.json();
-    produtos = data.record || [];
+    produtos = (data.record && data.record.produtos) || [];
   }catch(e){
     produtos = [];
     alert('Deu erro ao abrir o catálogo:\n\n' + e.message);
@@ -557,7 +557,7 @@ async function salvarLista(){
         'Content-Type': 'application/json',
         'X-Master-Key': MASTER_KEY
       },
-      body: JSON.stringify(produtos)
+      body: JSON.stringify({ produtos: produtos })
     });
   }catch(e){
     console.error(e);
