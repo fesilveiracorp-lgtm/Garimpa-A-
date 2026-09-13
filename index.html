@@ -158,7 +158,6 @@ main{
 .card .cat{
   font-size:0.72rem;
   font-weight:700;
-  color:var(--roxo-escuro);
   background:rgba(155,93,229,0.18);
   color:#C9A6F5;
   display:inline-block;
@@ -176,18 +175,53 @@ main{
   color:var(--creme);
 }
 
-.card .preco{
+.card .descricao{
+  font-size:0.85rem;
+  color:var(--creme-2);
+  line-height:1.4;
+  margin:0 0 10px;
+}
+
+.lista-itens{
+  list-style:none;
+  margin:0 0 10px;
+  padding:0;
+  border-top:1px solid var(--contorno);
+}
+
+.lista-itens li{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 0;
+  border-bottom:1px solid var(--contorno);
+  font-size:0.9rem;
+}
+
+.lista-itens li span:first-child{
+  color:var(--creme);
+}
+
+.lista-itens li span:last-child{
+  color:var(--ouro-claro);
   font-family:'Baloo 2', sans-serif;
   font-weight:700;
-  color:var(--ouro-claro);
-  font-size:1.15rem;
-  margin:0 0 8px;
+  white-space:nowrap;
 }
 
 .card .vendedor{
   font-size:0.82rem;
   color:var(--creme-2);
   margin-bottom:12px;
+}
+
+.card .link-site{
+  display:block;
+  color:var(--ouro-claro);
+  font-size:0.82rem;
+  font-weight:600;
+  text-decoration:none;
+  margin-bottom:10px;
 }
 
 .card .zap{
@@ -215,13 +249,35 @@ main{
   color:var(--ouro-claro);
 }
 
-.card.vendido{
-  opacity:0.55;
-}
+.card.vendido{opacity:0.55;}
 
 .card.vendido .status{
   background:var(--roxo-escuro);
   color:#fff;
+}
+
+.wrap-foto{position:relative;}
+
+.card .foto{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:6px;
+  margin-bottom:10px;
+  display:block;
+  cursor:pointer;
+}
+
+.card .foto-contador{
+  position:absolute;
+  bottom:10px;
+  left:0;
+  background:rgba(11,14,31,0.75);
+  color:var(--ouro-claro);
+  font-size:0.7rem;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:6px 0 6px 0;
 }
 
 .fab{
@@ -270,9 +326,17 @@ main{
   color:var(--ouro-claro);
 }
 
-.campo{
-  margin-bottom:14px;
+.folha h4{
+  font-family:'Inter',sans-serif;
+  font-weight:700;
+  font-size:0.78rem;
+  color:var(--creme-2);
+  margin:22px 0 10px;
+  text-transform:uppercase;
+  letter-spacing:0.4px;
 }
+
+.campo{margin-bottom:14px;}
 
 .campo label{
   display:block;
@@ -293,9 +357,7 @@ main{
   color:var(--creme);
 }
 
-.campo input::placeholder, .campo textarea::placeholder{
-  color:#6E7399;
-}
+.campo input::placeholder, .campo textarea::placeholder{color:#6E7399;}
 
 .campo textarea{
   resize:vertical;
@@ -303,19 +365,7 @@ main{
   font-family:'Inter',sans-serif;
 }
 
-.campo input[type="file"]{
-  padding:8px;
-}
-
-.previa-foto{
-  margin-top:8px;
-  width:100%;
-  max-height:160px;
-  object-fit:cover;
-  border-radius:6px;
-  display:none;
-  border:1px solid var(--contorno);
-}
+.campo input[type="file"]{padding:8px;}
 
 .previas-fotos{
   display:flex;
@@ -332,107 +382,56 @@ main{
   border:1px solid var(--contorno);
 }
 
-.card .foto{
-  width:100%;
-  height:140px;
-  object-fit:cover;
-  border-radius:6px;
+.lista-itens-form{
   margin-bottom:10px;
-  display:block;
-  cursor:pointer;
 }
 
-.card .foto-contador{
-  position:absolute;
-  bottom:0;
-  left:0;
-  background:rgba(11,14,31,0.75);
-  color:var(--ouro-claro);
-  font-size:0.7rem;
-  font-weight:700;
-  padding:3px 8px;
-  border-radius:6px 0 6px 0;
-}
-
-.wrap-foto{
-  position:relative;
-}
-
-.card .link-site{
-  display:inline-flex;
+.linha-item-lista{
+  display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:6px;
+  background:var(--painel);
+  border:1px solid var(--contorno);
+  border-radius:6px;
+  padding:8px 12px;
+  margin-bottom:6px;
+  font-size:0.87rem;
+}
+
+.linha-item-lista button{
+  background:none;
+  border:none;
+  color:#D8586A;
+  font-weight:700;
+  font-size:1rem;
+  cursor:pointer;
+  padding:0 4px;
+}
+
+.linha-novo-item{
+  display:flex;
+  gap:8px;
+}
+
+.linha-novo-item input{flex:1;}
+.linha-novo-item input.item-preco{max-width:100px; flex:0 0 auto;}
+
+.btn-add-item{
+  background:none;
+  border:1.5px dashed var(--contorno);
   color:var(--ouro-claro);
   font-size:0.82rem;
   font-weight:600;
-  text-decoration:none;
-  margin-bottom:10px;
-}
-
-.galeria-overlay{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(4,6,16,0.92);
-  z-index:20;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  padding:20px;
-}
-
-.galeria-overlay.aberto{display:flex;}
-
-.galeria-overlay img{
-  max-width:100%;
-  max-height:70vh;
-  object-fit:contain;
-  border-radius:8px;
-}
-
-.galeria-miniaturas{
-  display:flex;
-  gap:8px;
-  margin-top:14px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-.galeria-miniaturas img{
-  width:52px;
-  height:52px;
-  object-fit:cover;
+  padding:9px 12px;
   border-radius:6px;
-  border:2px solid transparent;
   cursor:pointer;
-}
-
-.galeria-miniaturas img.ativa{
-  border-color:var(--ouro);
-}
-
-.galeria-fechar{
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:none;
-  border:none;
-  color:var(--creme);
-  font-size:1.8rem;
-  cursor:pointer;
-}
-
-.card .descricao{
-  font-size:0.85rem;
-  color:var(--creme-2);
-  line-height:1.4;
-  margin:0 0 8px;
+  white-space:nowrap;
 }
 
 .botoes-folha{
   display:flex;
   gap:10px;
-  margin-top:18px;
+  margin-top:20px;
 }
 
 .botoes-folha button{
@@ -491,6 +490,57 @@ main{
   color:var(--creme-2);
   font-size:0.9rem;
 }
+
+.galeria-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(4,6,16,0.92);
+  z-index:20;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:20px;
+}
+
+.galeria-overlay.aberto{display:flex;}
+
+.galeria-overlay img{
+  max-width:100%;
+  max-height:70vh;
+  object-fit:contain;
+  border-radius:8px;
+}
+
+.galeria-miniaturas{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.galeria-miniaturas img{
+  width:52px;
+  height:52px;
+  object-fit:cover;
+  border-radius:6px;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+
+.galeria-miniaturas img.ativa{border-color:var(--ouro);}
+
+.galeria-fechar{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:none;
+  border:none;
+  color:var(--creme);
+  font-size:1.8rem;
+  cursor:pointer;
+}
 </style>
 </head>
 <body>
@@ -508,21 +558,22 @@ main{
   <div id="grid" class="grid" style="display:none;"></div>
   <div id="vazio" class="vazio" style="display:none;">
     <h2>Ainda sem achados aqui</h2>
-    <p>Toque no + para cadastrar o primeiro produto ou serviço.</p>
+    <p>Toque no + para cadastrar o primeiro anúncio.</p>
   </div>
   <div class="rodape-admin">
     <button id="btnResetar">Zerar catálogo (admin)</button>
   </div>
 </main>
 
-<button class="fab" id="btnAbrir" title="Adicionar produto">+</button>
+<button class="fab" id="btnAbrir" title="Adicionar anúncio">+</button>
 
 <div class="overlay" id="overlay">
   <div class="folha">
-    <h2>Novo achado</h2>
+    <h2>Novo anúncio</h2>
+
     <div class="campo">
-      <label>Produto ou serviço</label>
-      <input type="text" id="fNome" placeholder="Ex: Ensaio fotográfico">
+      <label>Título do anúncio</label>
+      <input type="text" id="fNome" placeholder="Ex: Camisetas estampadas">
     </div>
     <div class="campo">
       <label>Categoria</label>
@@ -537,7 +588,7 @@ main{
     </div>
     <div class="campo">
       <label>Descrição</label>
-      <textarea id="fDescricao" placeholder="Conte os detalhes: tamanho, condição, o que está incluso..."></textarea>
+      <textarea id="fDescricao" placeholder="Conte os detalhes gerais do anúncio..."></textarea>
     </div>
     <div class="campo">
       <label>Fotos (a primeira vira a capa)</label>
@@ -548,11 +599,16 @@ main{
       <label>Link (site ou rede social)</label>
       <input type="text" id="fUrl" placeholder="Ex: instagram.com/seuservico">
     </div>
-    <div class="campo">
-      <label>Preço</label>
-      <input type="text" id="fPreco" placeholder="Ex: R$ 80,00">
+
+    <h4>Itens / variações deste anúncio</h4>
+    <div class="lista-itens-form" id="listaItensForm"></div>
+    <div class="linha-novo-item">
+      <input type="text" id="fItemNome" placeholder="Nome do item (ex: Tam. P)">
+      <input type="text" id="fItemPreco" class="item-preco" placeholder="R$ 40">
+      <button type="button" class="btn-add-item" id="btnAddItem">+ Adicionar</button>
     </div>
-    <div class="campo">
+
+    <div class="campo" style="margin-top:16px;">
       <label>Seu nome</label>
       <input type="text" id="fVendedor" placeholder="Como querem te chamar">
     </div>
@@ -562,7 +618,7 @@ main{
     </div>
     <div class="botoes-folha">
       <button class="btn-cancelar" id="btnCancelar">Cancelar</button>
-      <button class="btn-salvar" id="btnSalvar">Publicar</button>
+      <button class="btn-salvar" id="btnSalvar">Publicar anúncio</button>
     </div>
   </div>
 </div>
@@ -574,7 +630,6 @@ main{
 </div>
 
 <script>
-const CHAVE = 'garimpai:produtos';
 const SENHA_ADMIN = 'garimpa2026';
 const MASTER_KEY = '$2a$10$ZqnMw66wN1NcdYTN4sKN.eLi1tSyd2iMtfjhPrmoq41yYc9G1F19W';
 let BIN_ID = '6aa6d1c8ffd5d1605301f465';
@@ -600,9 +655,11 @@ async function garantirBin(){
   alert('Catálogo criado pela primeira vez!\n\nCopie este código:\n' + novoId + '\n\ne me avise para eu deixar isso permanente no arquivo.');
   return novoId;
 }
+
 let produtos = [];
 let filtroAtual = 'Todos';
 let fotosAtuais = [];
+let itensAtuais = [];
 const categorias = ['Todos','Produtos','Serviços','Digital','Alimentação','Moda','Outros'];
 
 function redimensionarImagem(arquivo){
@@ -643,6 +700,34 @@ document.getElementById('fFoto').onchange = async (e) => {
 
 document.getElementById('fCategoria').onchange = (e) => {
   document.getElementById('campoUrl').style.display = (e.target.value === 'Serviços') ? 'block' : 'none';
+};
+
+function desenharItensForm(){
+  const lista = document.getElementById('listaItensForm');
+  lista.innerHTML = '';
+  itensAtuais.forEach((item, i) => {
+    const linha = document.createElement('div');
+    linha.className = 'linha-item-lista';
+    linha.innerHTML = `<span>${item.nome} — ${item.preco}</span><button type="button" data-i="${i}">✕</button>`;
+    linha.querySelector('button').onclick = () => {
+      itensAtuais.splice(i, 1);
+      desenharItensForm();
+    };
+    lista.appendChild(linha);
+  });
+}
+
+document.getElementById('btnAddItem').onclick = () => {
+  const nome = document.getElementById('fItemNome').value.trim();
+  const preco = document.getElementById('fItemPreco').value.trim();
+  if(!nome || !preco){
+    alert('Preencha o nome e o preço do item.');
+    return;
+  }
+  itensAtuais.push({ nome, preco });
+  document.getElementById('fItemNome').value = '';
+  document.getElementById('fItemPreco').value = '';
+  desenharItensForm();
 };
 
 async function carregar(){
@@ -690,6 +775,32 @@ function desenharFaixa(){
   });
 }
 
+function abrirGaleria(fotos){
+  const overlay = document.getElementById('galeriaOverlay');
+  const imgGrande = document.getElementById('galeriaImgGrande');
+  const minis = document.getElementById('galeriaMiniaturas');
+
+  function mostrar(indice){
+    imgGrande.src = fotos[indice];
+    minis.querySelectorAll('img').forEach((m, i) => m.classList.toggle('ativa', i === indice));
+  }
+
+  minis.innerHTML = '';
+  fotos.forEach((src, i) => {
+    const mini = document.createElement('img');
+    mini.src = src;
+    mini.onclick = () => mostrar(i);
+    minis.appendChild(mini);
+  });
+
+  mostrar(0);
+  overlay.classList.add('aberto');
+}
+
+document.getElementById('galeriaFechar').onclick = () => {
+  document.getElementById('galeriaOverlay').classList.remove('aberto');
+};
+
 function desenharGrid(){
   const grid = document.getElementById('grid');
   const vazio = document.getElementById('vazio');
@@ -711,23 +822,26 @@ function desenharGrid(){
     const statusTxt = p.vendido ? 'VENDIDO' : 'DISPONÍVEL';
     const msg = encodeURIComponent('Oi ' + p.vendedor + ', vi "' + p.nome + '" no Garimpa Aí e quero saber mais!');
     const numero = (p.zap || '').replace(/\D/g,'');
-    const fotos = p.fotos || (p.foto ? [p.foto] : []);
+    const fotos = p.fotos || [];
+    const itens = p.itens || [];
     const linkUrl = p.url ? (p.url.startsWith('http') ? p.url : 'https://' + p.url) : '';
+
+    const linhasItens = itens.map(it => `<li><span>${it.nome}</span><span>${it.preco}</span></li>`).join('');
 
     card.innerHTML = `
       <span class="status">${statusTxt}</span>
       ${fotos.length ? `
         <div class="wrap-foto">
-          <img class="foto" data-id="${p.id}" src="${fotos[0]}">
+          <img class="foto" src="${fotos[0]}">
           ${fotos.length > 1 ? `<span class="foto-contador">📷 ${fotos.length}</span>` : ''}
         </div>
       ` : ''}
       <div class="cat">${p.categoria}</div>
       <h3>${p.nome}</h3>
-      <p class="preco">${p.preco}</p>
       ${p.descricao ? `<p class="descricao">${p.descricao}</p>` : ''}
+      ${itens.length ? `<ul class="lista-itens">${linhasItens}</ul>` : ''}
       <p class="vendedor">com ${p.vendedor}</p>
-      ${linkUrl ? `<a class="link-site" href="${linkUrl}" target="_blank">🔗 ${p.url}</a><br>` : ''}
+      ${linkUrl ? `<a class="link-site" href="${linkUrl}" target="_blank">🔗 ${p.url}</a>` : ''}
       ${numero ? `<a class="zap" href="https://wa.me/${numero}?text=${msg}" target="_blank">💬 Falar no Zap</a>` : ''}
       <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap;">
         <button data-id="${p.id}" class="alternar">
@@ -771,34 +885,6 @@ function desenharGrid(){
   });
 }
 
-function abrirGaleria(fotos){
-  const overlay = document.getElementById('galeriaOverlay');
-  const imgGrande = document.getElementById('galeriaImgGrande');
-  const minis = document.getElementById('galeriaMiniaturas');
-
-  function mostrar(indice){
-    imgGrande.src = fotos[indice];
-    minis.querySelectorAll('img').forEach((m, i) => {
-      m.classList.toggle('ativa', i === indice);
-    });
-  }
-
-  minis.innerHTML = '';
-  fotos.forEach((src, i) => {
-    const mini = document.createElement('img');
-    mini.src = src;
-    mini.onclick = () => mostrar(i);
-    minis.appendChild(mini);
-  });
-
-  mostrar(0);
-  overlay.classList.add('aberto');
-}
-
-document.getElementById('galeriaFechar').onclick = () => {
-  document.getElementById('galeriaOverlay').classList.remove('aberto');
-};
-
 document.getElementById('btnResetar').onclick = async () => {
   const senha = prompt('Senha de admin para zerar TODO o catálogo:');
   if(senha === null) return;
@@ -819,43 +905,54 @@ document.getElementById('btnCancelar').onclick = () => {
   document.getElementById('overlay').classList.remove('aberto');
 };
 
+function limparFormulario(){
+  document.getElementById('fNome').value = '';
+  document.getElementById('fDescricao').value = '';
+  document.getElementById('fVendedor').value = '';
+  document.getElementById('fZap').value = '';
+  document.getElementById('fUrl').value = '';
+  document.getElementById('fFoto').value = '';
+  document.getElementById('fItemNome').value = '';
+  document.getElementById('fItemPreco').value = '';
+  document.getElementById('previasFotos').innerHTML = '';
+  document.getElementById('campoUrl').style.display = 'none';
+  fotosAtuais = [];
+  itensAtuais = [];
+  desenharItensForm();
+}
+
 document.getElementById('btnSalvar').onclick = async () => {
   const nome = document.getElementById('fNome').value.trim();
   const categoria = document.getElementById('fCategoria').value;
   const descricao = document.getElementById('fDescricao').value.trim();
-  const preco = document.getElementById('fPreco').value.trim();
   const vendedor = document.getElementById('fVendedor').value.trim();
   const zap = document.getElementById('fZap').value.trim();
   const url = document.getElementById('fUrl').value.trim();
 
-  if(!nome || !preco || !vendedor){
-    alert('Preencha ao menos o nome, o preço e seu nome.');
+  if(!nome || !vendedor){
+    alert('Preencha ao menos o título do anúncio e seu nome.');
+    return;
+  }
+  if(itensAtuais.length === 0){
+    alert('Adicione ao menos um item com nome e preço.');
     return;
   }
 
   produtos.push({
     id: Date.now().toString(),
-    nome, categoria, descricao, preco, vendedor, zap, url,
+    nome, categoria, descricao, vendedor, zap, url,
     fotos: fotosAtuais,
+    itens: itensAtuais,
     vendido: false
   });
 
   await salvarLista();
   desenharGrid();
-
-  document.getElementById('fNome').value = '';
-  document.getElementById('fDescricao').value = '';
-  document.getElementById('fPreco').value = '';
-  document.getElementById('fVendedor').value = '';
-  document.getElementById('fZap').value = '';
-  document.getElementById('fUrl').value = '';
-  document.getElementById('fFoto').value = '';
-  document.getElementById('previasFotos').innerHTML = '';
-  document.getElementById('campoUrl').style.display = 'none';
-  fotosAtuais = [];
+  limparFormulario();
   document.getElementById('overlay').classList.remove('aberto');
 };
 
+desenharItensForm();
 carregar();
 </script>
 
