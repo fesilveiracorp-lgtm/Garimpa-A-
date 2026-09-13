@@ -317,6 +317,21 @@ main{
   border:1px solid var(--contorno);
 }
 
+.previas-fotos{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  flex-wrap:wrap;
+}
+
+.previas-fotos img{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:6px;
+  border:1px solid var(--contorno);
+}
+
 .card .foto{
   width:100%;
   height:140px;
@@ -324,6 +339,87 @@ main{
   border-radius:6px;
   margin-bottom:10px;
   display:block;
+  cursor:pointer;
+}
+
+.card .foto-contador{
+  position:absolute;
+  bottom:0;
+  left:0;
+  background:rgba(11,14,31,0.75);
+  color:var(--ouro-claro);
+  font-size:0.7rem;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:6px 0 6px 0;
+}
+
+.wrap-foto{
+  position:relative;
+}
+
+.card .link-site{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color:var(--ouro-claro);
+  font-size:0.82rem;
+  font-weight:600;
+  text-decoration:none;
+  margin-bottom:10px;
+}
+
+.galeria-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(4,6,16,0.92);
+  z-index:20;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:20px;
+}
+
+.galeria-overlay.aberto{display:flex;}
+
+.galeria-overlay img{
+  max-width:100%;
+  max-height:70vh;
+  object-fit:contain;
+  border-radius:8px;
+}
+
+.galeria-miniaturas{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.galeria-miniaturas img{
+  width:52px;
+  height:52px;
+  object-fit:cover;
+  border-radius:6px;
+  border:2px solid transparent;
+  cursor:pointer;
+}
+
+.galeria-miniaturas img.ativa{
+  border-color:var(--ouro);
+}
+
+.galeria-fechar{
+  position:absolute;
+  top:20px;
+  right:20px;
+  background:none;
+  border:none;
+  color:var(--creme);
+  font-size:1.8rem;
+  cursor:pointer;
 }
 
 .card .descricao{
@@ -444,9 +540,13 @@ main{
       <textarea id="fDescricao" placeholder="Conte os detalhes: tamanho, condição, o que está incluso..."></textarea>
     </div>
     <div class="campo">
-      <label>Foto</label>
-      <input type="file" id="fFoto" accept="image/*">
-      <img id="previaFoto" class="previa-foto">
+      <label>Fotos (a primeira vira a capa)</label>
+      <input type="file" id="fFoto" accept="image/*" multiple>
+      <div class="previas-fotos" id="previasFotos"></div>
+    </div>
+    <div class="campo" id="campoUrl" style="display:none;">
+      <label>Link (site ou rede social)</label>
+      <input type="text" id="fUrl" placeholder="Ex: instagram.com/seuservico">
     </div>
     <div class="campo">
       <label>Preço</label>
@@ -465,6 +565,12 @@ main{
       <button class="btn-salvar" id="btnSalvar">Publicar</button>
     </div>
   </div>
+</div>
+
+<div class="galeria-overlay" id="galeriaOverlay">
+  <button class="galeria-fechar" id="galeriaFechar">✕</button>
+  <img id="galeriaImgGrande">
+  <div class="galeria-miniaturas" id="galeriaMiniaturas"></div>
 </div>
 
 <script>
@@ -496,7 +602,7 @@ async function garantirBin(){
 }
 let produtos = [];
 let filtroAtual = 'Todos';
-let fotoAtual = '';
+let fotosAtuais = [];
 const categorias = ['Todos','Produtos','Serviços','Digital','Alimentação','Moda','Outros'];
 
 function redimensionarImagem(arquivo){
@@ -523,12 +629,20 @@ function redimensionarImagem(arquivo){
 }
 
 document.getElementById('fFoto').onchange = async (e) => {
-  const arquivo = e.target.files[0];
-  if(!arquivo) return;
-  fotoAtual = await redimensionarImagem(arquivo);
-  const previa = document.getElementById('previaFoto');
-  previa.src = fotoAtual;
-  previa.style.display = 'block';
+  const arquivos = Array.from(e.target.files);
+  if(arquivos.length === 0) return;
+  fotosAtuais = await Promise.all(arquivos.map(redimensionarImagem));
+  const previas = document.getElementById('previasFotos');
+  previas.innerHTML = '';
+  fotosAtuais.forEach(src => {
+    const img = document.createElement('img');
+    img.src = src;
+    previas.appendChild(img);
+  });
+};
+
+document.getElementById('fCategoria').onchange = (e) => {
+  document.getElementById('campoUrl').style.display = (e.target.value === 'Serviços') ? 'block' : 'none';
 };
 
 async function carregar(){
@@ -597,15 +711,23 @@ function desenharGrid(){
     const statusTxt = p.vendido ? 'VENDIDO' : 'DISPONÍVEL';
     const msg = encodeURIComponent('Oi ' + p.vendedor + ', vi "' + p.nome + '" no Garimpa Aí e quero saber mais!');
     const numero = (p.zap || '').replace(/\D/g,'');
+    const fotos = p.fotos || (p.foto ? [p.foto] : []);
+    const linkUrl = p.url ? (p.url.startsWith('http') ? p.url : 'https://' + p.url) : '';
 
     card.innerHTML = `
       <span class="status">${statusTxt}</span>
-      ${p.foto ? `<img class="foto" src="${p.foto}">` : ''}
+      ${fotos.length ? `
+        <div class="wrap-foto">
+          <img class="foto" data-id="${p.id}" src="${fotos[0]}">
+          ${fotos.length > 1 ? `<span class="foto-contador">📷 ${fotos.length}</span>` : ''}
+        </div>
+      ` : ''}
       <div class="cat">${p.categoria}</div>
       <h3>${p.nome}</h3>
       <p class="preco">${p.preco}</p>
       ${p.descricao ? `<p class="descricao">${p.descricao}</p>` : ''}
       <p class="vendedor">com ${p.vendedor}</p>
+      ${linkUrl ? `<a class="link-site" href="${linkUrl}" target="_blank">🔗 ${p.url}</a><br>` : ''}
       ${numero ? `<a class="zap" href="https://wa.me/${numero}?text=${msg}" target="_blank">💬 Falar no Zap</a>` : ''}
       <div style="margin-top:10px; display:flex; gap:14px; flex-wrap:wrap;">
         <button data-id="${p.id}" class="alternar">
@@ -615,6 +737,10 @@ function desenharGrid(){
       </div>
     `;
     grid.appendChild(card);
+
+    if(fotos.length){
+      card.querySelector('.foto').onclick = () => abrirGaleria(fotos);
+    }
   });
 
   grid.querySelectorAll('.alternar').forEach(btn => {
@@ -645,6 +771,34 @@ function desenharGrid(){
   });
 }
 
+function abrirGaleria(fotos){
+  const overlay = document.getElementById('galeriaOverlay');
+  const imgGrande = document.getElementById('galeriaImgGrande');
+  const minis = document.getElementById('galeriaMiniaturas');
+
+  function mostrar(indice){
+    imgGrande.src = fotos[indice];
+    minis.querySelectorAll('img').forEach((m, i) => {
+      m.classList.toggle('ativa', i === indice);
+    });
+  }
+
+  minis.innerHTML = '';
+  fotos.forEach((src, i) => {
+    const mini = document.createElement('img');
+    mini.src = src;
+    mini.onclick = () => mostrar(i);
+    minis.appendChild(mini);
+  });
+
+  mostrar(0);
+  overlay.classList.add('aberto');
+}
+
+document.getElementById('galeriaFechar').onclick = () => {
+  document.getElementById('galeriaOverlay').classList.remove('aberto');
+};
+
 document.getElementById('btnResetar').onclick = async () => {
   const senha = prompt('Senha de admin para zerar TODO o catálogo:');
   if(senha === null) return;
@@ -672,6 +826,7 @@ document.getElementById('btnSalvar').onclick = async () => {
   const preco = document.getElementById('fPreco').value.trim();
   const vendedor = document.getElementById('fVendedor').value.trim();
   const zap = document.getElementById('fZap').value.trim();
+  const url = document.getElementById('fUrl').value.trim();
 
   if(!nome || !preco || !vendedor){
     alert('Preencha ao menos o nome, o preço e seu nome.');
@@ -680,8 +835,8 @@ document.getElementById('btnSalvar').onclick = async () => {
 
   produtos.push({
     id: Date.now().toString(),
-    nome, categoria, descricao, preco, vendedor, zap,
-    foto: fotoAtual,
+    nome, categoria, descricao, preco, vendedor, zap, url,
+    fotos: fotosAtuais,
     vendido: false
   });
 
@@ -693,9 +848,11 @@ document.getElementById('btnSalvar').onclick = async () => {
   document.getElementById('fPreco').value = '';
   document.getElementById('fVendedor').value = '';
   document.getElementById('fZap').value = '';
+  document.getElementById('fUrl').value = '';
   document.getElementById('fFoto').value = '';
-  document.getElementById('previaFoto').style.display = 'none';
-  fotoAtual = '';
+  document.getElementById('previasFotos').innerHTML = '';
+  document.getElementById('campoUrl').style.display = 'none';
+  fotosAtuais = [];
   document.getElementById('overlay').classList.remove('aberto');
 };
 
